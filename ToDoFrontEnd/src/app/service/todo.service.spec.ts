@@ -103,7 +103,7 @@ describe('TodoService', () => {
   it('should delete todo item', () => {
     const id = 3;
     httpClientSpy.delete.call(todoStoreService.Delete(id));
-    expect(service.todoItems.length).toBe(4);
+    expect(httpClientSpy.delete.calls.count()).toBe(1, 'one call');
   });
 
   it('should process error response when delete todoitems fail', fakeAsync(() => {
@@ -138,7 +138,7 @@ describe('TodoService', () => {
 
     httpClientSpy.get.and.returnValue(asyncError(errorResponse));
     // when
-    service.GetTodoItemById(2);
+    service.SetSelectedTodoItemId(2);
     tick(50);
     // then
     expect(service.getItemFailMessage).toBe('Get by id fail because webapi error');
