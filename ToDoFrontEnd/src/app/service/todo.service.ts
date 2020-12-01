@@ -49,6 +49,7 @@ export class TodoService {
     // this.currentId++;
 
     this.todoHttpService.Create(todoItem).subscribe(() => {
+      this.createFailMessage = '';
     },
       error => {
         this.createFailMessage = 'Create fail because of web api error';
