@@ -15,6 +15,7 @@ export class TodoService {
   public postFailMessage: string;
   public updateFailMessage: string;
   public deleteFailMessage: string;
+  public getItemFailMessage: string;
 
   private _todoItems: Array<ToDoItem>;
 
@@ -27,6 +28,7 @@ export class TodoService {
     this.postFailMessage = '';
     this.updateFailMessage = '';
     this.deleteFailMessage = '';
+    this.getItemFailMessage = '';
     // this.currentId = this.todoItems.length;
   }
 
@@ -65,12 +67,26 @@ export class TodoService {
       this.updateFailMessage = '';
     },
       error => {
-        this.updateFailMessage = 'update fail because webapi error';
+        this.updateFailMessage = 'Update fail because webapi error';
       });
   }
 
   public DeleteTodoItem(id: number): void {
-    this.todoHttpService.Delete(id);
+    this.todoHttpService.Delete(id).subscribe(todoitem => {
+      this.deleteFailMessage = '';
+    },
+    error => {
+      this.deleteFailMessage = 'Delete fail because webapi error';
+    });
+  }
+
+  public GetTodoItemById(id: number): void {
+    this.todoHttpService.GetById(id).subscribe(todoitem => {
+      console.log(todoitem);
+    },
+    error => {
+      this.getItemFailMessage = 'Get by id fail because webapi error';
+    });
   }
 
   public SetSelectedTodoItemId(id: number): void {

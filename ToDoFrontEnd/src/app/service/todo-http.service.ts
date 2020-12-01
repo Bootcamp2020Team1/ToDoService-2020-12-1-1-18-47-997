@@ -24,15 +24,15 @@ export class TodoHttpService {
     return this.httpClient.post<ToDoItem>('https://localhost:5001/ToDoItem', todoItem, httpOptions);
   }
 
-  public GetById(): Observable<ToDoItem> {
-    return this.httpClient.get<ToDoItem>('https://localhost:5001/ToDoItem/{id}')
+  public GetById(id: number): Observable<ToDoItem> {
+    return this.httpClient.get<ToDoItem>(`https://localhost:5001/ToDoItem?id=${id}`)
   }
 
   public Update(todoItem: ToDoItem): Observable<ToDoItem> {
     return this.httpClient.put<ToDoItem>('https://localhost:5001/ToDoItem', todoItem, httpOptions);
   }
 
-  public Delete(id: number): void {
-    this.httpClient.delete('https://localhost:5001/ToDoItem');
+  public Delete(id: number): Observable<any> {
+    return this.httpClient.delete(`https://localhost:5001/ToDoItem?id=${id}`);
   }
 }
