@@ -8,11 +8,11 @@ export class TodoStoreService {
   private _todoItems: Array<ToDoItem>;
   constructor() {
     this._todoItems = new Array<ToDoItem>();
-    this._todoItems.push(new ToDoItem(0, "Task1", "Task1 description", false));
-    this._todoItems.push(new ToDoItem(1, "Task2", "Task2 description", false));
-    this._todoItems.push(new ToDoItem(2, "Task3", "Task3 description", false));
-    this._todoItems.push(new ToDoItem(3, "Task4", "Task4 description", false));
-    this._todoItems.push(new ToDoItem(4, "Task5", "Task5 description", false));
+    this._todoItems.push(new ToDoItem(0, 'Task1', 'Task1 description', false));
+    this._todoItems.push(new ToDoItem(1, 'Task2', 'Task2 description', false));
+    this._todoItems.push(new ToDoItem(2, 'Task3', 'Task3 description', false));
+    this._todoItems.push(new ToDoItem(3, 'Task4', 'Task4 description', false));
+    this._todoItems.push(new ToDoItem(4, 'Task5', 'Task5 description', false));
   }
 
   public GetAll(): Array<ToDoItem> {
@@ -22,7 +22,7 @@ export class TodoStoreService {
   public FindById(id: number): ToDoItem {
     let foundTodoItem = this._todoItems.find(todoItem => todoItem.id === id);
     if (foundTodoItem === undefined) {
-      foundTodoItem = new ToDoItem(-1, "", "", false);
+      foundTodoItem = new ToDoItem(-1, '', '', false);
     }
     return foundTodoItem;
   }
@@ -37,7 +37,7 @@ export class TodoStoreService {
       foundTodoItem.description = updateTodoItem.description;
       foundTodoItem.isDone = updateTodoItem.isDone;
       foundTodoItem.title = updateTodoItem.title;
-    }    
+    }
   }
 
   public Delete(id: number): void{

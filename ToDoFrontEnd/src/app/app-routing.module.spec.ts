@@ -35,13 +35,13 @@ describe('Router', () => {
     expect(location.path()).toBe('/');
   }));
 
-  it('navigate to "edit/1" should redirects to /edit/1', fakeAsync(() =>{
+  it('navigate to "edit/1" should redirects to /edit/1', fakeAsync(() => {
     router.navigate(['edit/1']);
     tick(50);
     expect(location.path()).toBe('/edit/1');
   }));
 
-  it('navigate to "detail/1" should redirects to /detail/1', fakeAsync(() =>{
+  it('navigate to "detail/1" should redirects to /detail/1', fakeAsync(() => {
     router.navigate(['detail/1']);
     tick(50);
     expect(location.path()).toBe('/detail/1');
