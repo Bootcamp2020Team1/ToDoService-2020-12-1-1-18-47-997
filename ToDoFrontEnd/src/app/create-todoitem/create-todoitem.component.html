@@ -1,6 +1,8 @@
-<h1>This is create todoitem component!</h1>
+<h1>This is create-todoitem component!</h1>
 <form (ngSubmit)="createToDoItem()">
     <label>Title: </label><input type="text" name="title" [(ngModel)]="toDoItem.title">
     <label>Description: </label><input type="text" name="description" [(ngModel)]="toDoItem.description">
     <button type="submit">Submit</button>
 </form>
+
+<h1>{{todoService.createFailMessage}}</h1>
