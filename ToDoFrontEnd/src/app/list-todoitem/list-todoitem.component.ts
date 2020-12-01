@@ -2,6 +2,7 @@ import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { ToDoItem } from '../model/ToDoItem';
 import { TodoService } from '../service/todo.service';
+import { tick } from '@angular/core/testing';
 
 @Component({
   selector: 'app-list-todoitem',
@@ -27,6 +28,9 @@ export class ListTodoitemComponent implements OnInit {
 
   public deleteTodoItem(id: number): void {
     this.todoService.DeleteTodoItem(id);
+    tick(50);
+    this.toDoItems = [];
+    this.toDoItems = this.todoService.todoItems;
   }
 
   public selectTodoItem(id: number): void {

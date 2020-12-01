@@ -2,6 +2,7 @@ import { ToDoItem } from './../model/ToDoItem';
 import { TodoHttpService } from './todo-http.service';
 import { Injectable } from '@angular/core';
 import { TodoStoreService } from './todo-store.service';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -11,12 +12,10 @@ export class TodoService {
   public updatingToDoItem: ToDoItem;
   public selectedTodoItem: ToDoItem;
   public getAllErrorMessage: string = '';
-  private currentId: number = 0;
 
   constructor(private todoStore: TodoStoreService, private todoHttpService: TodoHttpService) {
     this.updatingToDoItem = new ToDoItem(-1, '', '', false);
     this.selectedTodoItem = new ToDoItem(-1, '', '', false);
-    //this.currentId = this.todoItems.length;
   }
 
   public get todoItems(): Array<ToDoItem> {
@@ -32,11 +31,15 @@ export class TodoService {
   }
 
   public SetUpdatingTodoItemId(id: number): void {
-    const foundTodoItem = this.todoStore.FindById(id);
-
-    if (foundTodoItem !== undefined) {
-      this.updatingToDoItem = Object.assign({}, foundTodoItem);
-    }
+    this.todoHttpService.getById(id).subscribe(
+      item => {
+        this.updatingToDoItem = item;
+        this.getAllErrorMessage = '';
+      },
+      error => {
+        this.getAllErrorMessage = 'Get by id failed because of web api error.';
+      }
+    );
   }
 
   public Create(todoItem: ToDoItem) {
@@ -44,7 +47,6 @@ export class TodoService {
     this.todoHttpService.create(newTodoItem).subscribe(
       item => {
         this.getAllErrorMessage = '';
-        this.currentId++;
       },
       error => this.getAllErrorMessage = 'Post failed because of web api error.'
     );
