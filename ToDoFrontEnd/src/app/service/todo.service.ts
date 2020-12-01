@@ -81,8 +81,9 @@ export class TodoService {
   }
 
   public GetTodoItemById(id: number): void {
-    this.todoHttpService.GetById(id).subscribe(todoitem => {
-      console.log(todoitem);
+    this.todoHttpService.GetById(id).subscribe(item => {
+      this.selectedTodoItem = item;
+      this.getItemFailMessage = '';
     },
     error => {
       this.getItemFailMessage = 'Get by id fail because webapi error';
@@ -90,6 +91,12 @@ export class TodoService {
   }
 
   public SetSelectedTodoItemId(id: number): void {
-    this.selectedTodoItem = this.todoStore.FindById(id);
+    this.todoHttpService.GetById(id).subscribe(item => {
+      this.selectedTodoItem = item;
+      this.getItemFailMessage = '';
+    },
+    error => {
+      this.getItemFailMessage = 'Get by id fail because webapi error';
+    });
   }
 }
