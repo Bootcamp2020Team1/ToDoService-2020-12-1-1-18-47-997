@@ -10,7 +10,7 @@ import { TodoService } from '../service/todo.service';
 })
 export class UpdateTodoItemComponent implements OnInit {
 
-  constructor(public todoItemService: TodoService, private activatedRoute: ActivatedRoute) {
+  constructor(public todoItemService: TodoService, private activatedRoute: ActivatedRoute, private router: Router) {
   }
 
   ngOnInit(): void {
@@ -20,5 +20,6 @@ export class UpdateTodoItemComponent implements OnInit {
 
   public updateTodoItem(): void {
     this.todoItemService.UpdateTodoItem(this.todoItemService.updatingToDoItem);
+    this.router.navigate(['/'])
   }
 }
