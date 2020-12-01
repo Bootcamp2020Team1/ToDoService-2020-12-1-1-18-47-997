@@ -37,7 +37,7 @@ export class TodoStoreService {
       foundTodoItem.description = updateTodoItem.description;
       foundTodoItem.isDone = updateTodoItem.isDone;
       foundTodoItem.title = updateTodoItem.title;
-    }    
+    }
   }
 
   public Delete(id: number): void{
