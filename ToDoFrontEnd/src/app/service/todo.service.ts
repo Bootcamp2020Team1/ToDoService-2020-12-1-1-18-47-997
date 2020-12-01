@@ -1,19 +1,20 @@
 import { Injectable } from '@angular/core';
 import { ToDoItem } from '../model/ToDoItem';
+import { TodoHttpService } from './todo-http.service';
 import { TodoStoreService } from './todo-store.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class TodoService {
-  
+
   public updatingToDoItem: ToDoItem;
   public selectedTodoItem: ToDoItem;
   private currentId: number = 0;
 
   private _todoItems: Array<ToDoItem>;
 
-  constructor(private todoStore: TodoStoreService) {
+  constructor(private todoStore: TodoStoreService, private todoHttpService: TodoHttpService) {
     this._todoItems = todoStore.GetAll();
     this.updatingToDoItem = new ToDoItem(-1, "", "", false);
     this.selectedTodoItem = new ToDoItem(-1, "", "", false);
@@ -21,12 +22,16 @@ export class TodoService {
   }
 
   public get todoItems(): Array<ToDoItem> {
-    return this.todoStore.GetAll();
+    const allTodoItem = new Array<ToDoItem>();
+    this.todoHttpService.GetAll().subscribe(todoItems => {
+      allTodoItem.push(...todoItems)
+    })
+    return allTodoItem;
   }
 
   public SetUpdatingTodoItemId(id: number): void {
     const foundTodoItem = this.todoStore.FindById(id);
-    
+
     if (foundTodoItem !== undefined) {
       this.updatingToDoItem = Object.assign({}, foundTodoItem);
     }
@@ -43,11 +48,11 @@ export class TodoService {
     this.todoStore.Update(updateTodoItems);
   }
 
-  public DeleteTodoItem(id: number):void{   
-    this.todoStore.Delete(id); 
+  public DeleteTodoItem(id: number): void {
+    this.todoStore.Delete(id);
   }
 
-  public SetSelectedTodoItemId(id: number):void{
+  public SetSelectedTodoItemId(id: number): void {
     this.selectedTodoItem = this.todoStore.FindById(id);
   }
 }
