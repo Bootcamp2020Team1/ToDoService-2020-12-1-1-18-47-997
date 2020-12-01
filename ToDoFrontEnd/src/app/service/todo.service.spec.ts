@@ -115,4 +115,16 @@ describe('TodoService', () => {
     service.FindTodoItem(10);
     expect(httpClientSpy.get.calls.count()).toBe(1);
   });
+
+  it('should catch error when get todoitem by id fail', fakeAsync(() => {
+    const errorResponse = new HttpErrorResponse({
+      error: 'test 404 error',
+      status: 404, statusText: 'Not Found'
+    });
+    httpClientSpy.get.and.returnValue(asyncError(errorResponse))
+    const id = 1;
+    service.FindTodoItem(id);
+    tick(0);
+    expect(service.getFailMessage).toBe('Get fail because of web api error');
+  }));
 });
