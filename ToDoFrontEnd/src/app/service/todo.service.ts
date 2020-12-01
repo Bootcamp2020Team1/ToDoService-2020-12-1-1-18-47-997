@@ -11,7 +11,8 @@ export class TodoService {
   public updatingToDoItem: ToDoItem;
   public selectedTodoItem: ToDoItem;
   private currentId: number = 0;
-
+  public getAllFailMessage: string = '';
+  public createFailMessage: string = '';
   private _todoItems: Array<ToDoItem>;
 
   constructor(private todoStore: TodoStoreService,
@@ -26,7 +27,10 @@ export class TodoService {
     const allTodoItem = new Array<ToDoItem>();
     this.todoHttpService.GetAll().subscribe(todoItems => {
       allTodoItem.push(...todoItems)
-    })
+    },
+      error => {
+        this.getAllFailMessage = 'Get all fail because of web api error';
+      })
     return allTodoItem;
   }
 
@@ -39,10 +43,16 @@ export class TodoService {
   }
 
   public Create(todoItem: ToDoItem) {
-    todoItem.id = this.currentId;
-    var newTodoItem = Object.assign({}, todoItem);
-    this.todoStore.Create(newTodoItem);
-    this.currentId++;
+    // todoItem.id = this.currentId;
+    // var newTodoItem = Object.assign({}, todoItem);
+    // this.todoStore.Create(newTodoItem);
+    // this.currentId++;
+
+    this.todoHttpService.Create(todoItem).subscribe(() => {
+    },
+      error => {
+        this.createFailMessage = 'Create fail because of web api error';
+      })
   }
 
   public UpdateTodoItem(updateTodoItems: ToDoItem): void {

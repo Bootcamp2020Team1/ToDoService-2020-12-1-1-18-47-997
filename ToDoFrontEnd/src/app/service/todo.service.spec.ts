@@ -1,5 +1,5 @@
 import { HttpErrorResponse } from '@angular/common/http';
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { async, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { defer, of } from 'rxjs';
 import { ToDoItem } from '../model/ToDoItem';
 import { TodoHttpService } from './todo-http.service';
@@ -9,19 +9,15 @@ import { TodoService } from './todo.service';
 describe('TodoService', () => {
 
   let service: TodoService;
-  let httpClientSpy: { get: jasmine.Spy };
+  let httpClientSpy: { get: jasmine.Spy, post: jasmine.Spy };
   let todoStoreService: TodoStoreService;
   let todoHttpService: TodoHttpService;
 
   beforeEach(() => {
     // TODO: spy on other methods too
-    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get']);
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get', 'post']);
     todoStoreService = new TodoStoreService();
-
     todoHttpService = new TodoHttpService(httpClientSpy as any)
-    const expectedAllTodoItems = todoStoreService.GetAll();
-    httpClientSpy.get.and.returnValue(of(expectedAllTodoItems));
-
     service = new TodoService(todoStoreService, todoHttpService);
     // TestBed.configureTestingModule({});
     // service = TestBed.inject(TodoService);
@@ -39,19 +35,41 @@ describe('TodoService', () => {
   });
 
   it('should get all todoitems', () => {
+    const expectedAllTodoItems = todoStoreService.GetAll();
+    httpClientSpy.get.and.returnValue(of(expectedAllTodoItems));
     expect(service.todoItems.length).toBe(5);
     expect(httpClientSpy.get.calls.count()).toBe(1);
   });
 
+  it('should catch error when get all todoitems fail', fakeAsync(() => {
+    const errorResponse = new HttpErrorResponse({
+      error: 'test 404 error',
+      status: 404, statusText: 'Not Found'
+    });
+    httpClientSpy.get.and.returnValue(asyncError(errorResponse))
+    service.todoItems;
+    tick(0);
+    expect(service.getAllFailMessage).toBe('Get all fail because of web api error');
+  }));
+
   it('should create todo-item via mockhttp', () => {
     const newTodoItem = new ToDoItem(10, "new todo", "new todo description", false);
+    httpClientSpy.post.and.returnValue(of(newTodoItem));
     service.Create(newTodoItem);
-    expect(service.todoItems.length).toBe(6);
-    expect(service.todoItems[5].id === newTodoItem.id);
-    expect(service.todoItems[5].title === newTodoItem.title);
-    expect(service.todoItems[5].description === newTodoItem.description);
-    expect(service.todoItems[5].isDone === newTodoItem.isDone);
+    expect(httpClientSpy.post.calls.count()).toBe(1);
   });
+
+  it('should catch error when create todoitems fail', fakeAsync(() => {
+    const errorResponse = new HttpErrorResponse({
+      error: 'test 404 error',
+      status: 404, statusText: 'Not Found'
+    });
+    httpClientSpy.post.and.returnValue(asyncError(errorResponse))
+    const newTodoItem = new ToDoItem(10, "new todo", "new todo description", false);
+    service.Create(newTodoItem);
+    tick(0);
+    expect(service.createFailMessage).toBe('Create fail because of web api error');
+  }));
 
   it('should update todo-item', () => {
     const updateTodoItem = service.todoItems[0];
