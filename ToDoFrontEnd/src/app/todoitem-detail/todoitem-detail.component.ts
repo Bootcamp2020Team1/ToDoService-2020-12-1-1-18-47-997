@@ -1,3 +1,4 @@
+import { Router, ActivatedRoute } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { TodoService } from '../service/todo.service';
 
@@ -8,8 +9,10 @@ import { TodoService } from '../service/todo.service';
 })
 export class TodoitemDetailComponent implements OnInit {
 
-  constructor(public todoService: TodoService) { }
+  constructor(public todoService: TodoService, private router: ActivatedRoute) { }
 
   ngOnInit(): void {
+    const id = this.router.snapshot.paramMap.get('id');
+    this.todoService.SetSelectedTodoItemId(Number(id));
   }
 }

@@ -22,7 +22,7 @@ export class ListTodoitemComponent implements OnInit {
   }
 
   public updateTodoItem(id: number): void {
-    this.router.navigate(["edit",id]);
+    this.router.navigate(['edit', id]);
   }
 
   public deleteTodoItem(id: number): void {
@@ -30,6 +30,6 @@ export class ListTodoitemComponent implements OnInit {
   }
 
   public selectTodoItem(id: number): void {
-    this.todoService.SetSelectedTodoItemId(id);
+    this.router.navigate(['detail', id]);
   }
 }
