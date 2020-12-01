@@ -9,7 +9,7 @@ import { TodoService } from './todo.service';
 describe('TodoService', () => {
 
   let service: TodoService;
-  let httpClientSpy: { get: jasmine.Spy };
+  let httpClientSpy: { get: jasmine.Spy, post: jasmine.Spy, put: jasmine.Spy };
   let todoStoreService: TodoStoreService;
   let todoHttpService: TodoHttpService;
 
@@ -59,25 +59,52 @@ describe('TodoService', () => {
 
   it('should create todo-item via mockhttp', () => {
     const newTodoItem = new ToDoItem(10, 'new todo', 'new todo description', false);
+    httpClientSpy.post.and.returnValue(of(newTodoItem));
     service.Create(newTodoItem);
-    expect(service.todoItems.length).toBe(6);
-    expect(service.todoItems[5].id === newTodoItem.id);
-    expect(service.todoItems[5].title === newTodoItem.title);
-    expect(service.todoItems[5].description === newTodoItem.description);
-    expect(service.todoItems[5].isDone === newTodoItem.isDone);
+    // then
+    expect(httpClientSpy.post.calls.count()).toBe(1, 'one call');
   });
 
+  it('should process error response when create todoitems fail', fakeAsync(() => {
+    // given
+    const errorResponse = new HttpErrorResponse({
+      error: 'test 404 error',
+      status: 404, statusText: 'Not Found'
+    });
+
+    httpClientSpy.post.and.returnValue(asyncError(errorResponse));
+    // when
+    service.Create(new ToDoItem(10, 'new todo', 'new todo description', false));
+    tick(50);
+    // then
+    expect(service.postFailMessage).toBe('Post fail because webapi error');
+  }));
+
   it('should update todo-item', () => {
-    const updateTodoItem = service.todoItems[0];
-    updateTodoItem.description = 'updated description';
-    updateTodoItem.title = 'updated title';
-    updateTodoItem.isDone = true;
-    service.UpdateTodoItem(updateTodoItem);
-    expect(service.todoItems.length).toBe(5);
-    expect(service.todoItems[0].description).toBe(updateTodoItem.description);
-    expect(service.todoItems[0].title).toBe(updateTodoItem.title);
-    expect(service.todoItems[0].isDone).toBe(updateTodoItem.isDone);
+
+    httpClientSpy.put.call(todoStoreService.Update(new ToDoItem(10, 'new todo', 'new todo description', false)));
+
+    expect(httpClientSpy.put.calls.count()).toBe(1, 'one call');
+    // expect(service.todoItems.length).toBe(5);
+    // expect(service.todoItems[0].description).toBe(updateTodoItem.description);
+    // expect(service.todoItems[0].title).toBe(updateTodoItem.title);
+    // expect(service.todoItems[0].isDone).toBe(updateTodoItem.isDone);
   });
+
+  it('should process error response when update todoitems fail', fakeAsync(() => {
+    // given
+    const errorResponse = new HttpErrorResponse({
+      error: 'test 404 error',
+      status: 404, statusText: 'Not Found'
+    });
+
+    httpClientSpy.post.and.returnValue(asyncError(errorResponse));
+    // when
+    service.Create(new ToDoItem(10, 'new todo', 'new todo description', false));
+    tick(50);
+    // then
+    expect(service.postFailMessage).toBe('Post fail because webapi error');
+  }));
 
   it('should delete todo item', () => {
     const id = service.todoItems[0].id;
