@@ -9,13 +9,13 @@ import { TodoService } from './todo.service';
 describe('TodoService', () => {
 
   let service: TodoService;
-  let httpClientSpy: { get: jasmine.Spy, post: jasmine.Spy };
+  let httpClientSpy: { get: jasmine.Spy, post: jasmine.Spy, put: jasmine.Spy };
   let todoStoreService: TodoStoreService;
   let todoHttpService: TodoHttpService;
 
   beforeEach(() => {
     // TODO: spy on other methods too
-    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get', 'post']);
+    httpClientSpy = jasmine.createSpyObj('HttpClient', ['get', 'post', 'put']);
     todoStoreService = new TodoStoreService();
     todoHttpService = new TodoHttpService(httpClientSpy as any)
     service = new TodoService(todoStoreService, todoHttpService);
@@ -61,8 +61,8 @@ describe('TodoService', () => {
 
   it('should catch error when create todoitems fail', fakeAsync(() => {
     const errorResponse = new HttpErrorResponse({
-      error: 'test 404 error',
-      status: 404, statusText: 'Not Found'
+      error: 'test 400 error',
+      status: 400, statusText: 'Bad Request'
     });
     httpClientSpy.post.and.returnValue(asyncError(errorResponse))
     const newTodoItem = new ToDoItem(10, "new todo", "new todo description", false);
@@ -72,16 +72,23 @@ describe('TodoService', () => {
   }));
 
   it('should update todo-item', () => {
-    const updateTodoItem = service.todoItems[0];
-    updateTodoItem.description = "updated description";
-    updateTodoItem.title = "updated title";
-    updateTodoItem.isDone = true;
-    service.UpdateTodoItem(updateTodoItem);
-    expect(service.todoItems.length).toBe(5);
-    expect(service.todoItems[0].description).toBe(updateTodoItem.description);
-    expect(service.todoItems[0].title).toBe(updateTodoItem.title);
-    expect(service.todoItems[0].isDone).toBe(updateTodoItem.isDone);
+    const newTodoItem = new ToDoItem(10, "new todo", "new todo description", false);
+    httpClientSpy.put.and.returnValue(of(newTodoItem));
+    service.UpdateTodoItem(newTodoItem);
+    expect(httpClientSpy.put.calls.count()).toBe(1);
   });
+
+  it('should catch error when update todoitems fail', fakeAsync(() => {
+    const errorResponse = new HttpErrorResponse({
+      error: 'test 400 error',
+      status: 400, statusText: 'Bad Request'
+    });
+    httpClientSpy.put.and.returnValue(asyncError(errorResponse))
+    const newTodoItem = new ToDoItem(10, "new todo", "new todo description", false);
+    service.UpdateTodoItem(newTodoItem);
+    tick(0);
+    expect(service.updateFailMessage).toBe('Update fail because of web api error');
+  }));
 
   it('should delete todo item', () => {
     const id = service.todoItems[0].id;
