@@ -38,11 +38,13 @@ export class TodoService {
   }
 
   public SetUpdatingTodoItemId(id: number): void {
-    const foundTodoItem = this.todoStore.FindById(id);
+    this.todoHttpService.Get(id).subscribe(foundTodoItem => {
+      if (foundTodoItem !== undefined) {
+        this.updatingToDoItem = Object.assign({}, foundTodoItem);
+      }
+    })
 
-    if (foundTodoItem !== undefined) {
-      this.updatingToDoItem = Object.assign({}, foundTodoItem);
-    }
+
   }
 
   public Create(todoItem: ToDoItem) {
@@ -55,7 +57,8 @@ export class TodoService {
   }
 
   public UpdateTodoItem(updateTodoItems: ToDoItem): void {
-    this.todoHttpService.Update(updateTodoItems).subscribe(() => {
+    this.todoHttpService.Update(updateTodoItems).subscribe(item => {
+      this.updatingToDoItem = item;
       this.updateFailMessage = '';
     },
       error => {
@@ -73,7 +76,8 @@ export class TodoService {
   }
 
   public FindTodoItem(id: number): void {
-    this.todoHttpService.Get(id).subscribe(() => {
+    this.todoHttpService.Get(id).subscribe(item => {
+      this.selectedTodoItem = item;
       this.getFailMessage = '';
     },
       error => {
@@ -81,7 +85,7 @@ export class TodoService {
       });
   }
 
-  public SetSelectedTodoItemId(id: number): void {
-    this.selectedTodoItem = this.todoStore.FindById(id);
-  }
+  // public SetSelectedTodoItemId(id: number): void {
+  //   this.selectedTodoItem = this.todoStore.FindById(id);
+  // }
 }

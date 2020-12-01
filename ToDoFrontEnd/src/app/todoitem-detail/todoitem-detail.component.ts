@@ -13,6 +13,6 @@ export class TodoitemDetailComponent implements OnInit {
 
   ngOnInit(): void {
     const id = this.activatedRoute.snapshot.paramMap.get('id');
-    this.todoService.SetSelectedTodoItemId(Number(id));
+    this.todoService.FindTodoItem(Number(id));
   }
 }
