@@ -14,11 +14,12 @@ export class TodoService {
 
   private _todoItems: Array<ToDoItem>;
 
-  constructor(private todoStore: TodoStoreService, private todoHttpService: TodoHttpService) {
+  constructor(private todoStore: TodoStoreService,
+    private todoHttpService: TodoHttpService) {
     this._todoItems = todoStore.GetAll();
     this.updatingToDoItem = new ToDoItem(-1, "", "", false);
     this.selectedTodoItem = new ToDoItem(-1, "", "", false);
-    this.currentId = this.todoItems.length;
+    // this.currentId = this.todoItems.length;
   }
 
   public get todoItems(): Array<ToDoItem> {
