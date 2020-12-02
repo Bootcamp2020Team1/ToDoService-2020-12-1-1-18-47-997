@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToDoItem } from '../model/ToDoItem';
 import { TodoHttpService } from './todo-http.service';
 import { TodoStoreService } from './todo-store.service';
@@ -20,7 +21,8 @@ export class TodoService {
   private _todoItems: Array<ToDoItem>;
 
   constructor(private todoStore: TodoStoreService,
-    private todoHttpService: TodoHttpService) {
+    private todoHttpService: TodoHttpService,
+    private route: Router) {
     this._todoItems = todoStore.GetAll();
     this.updatingToDoItem = new ToDoItem(-1, '', '', false);
     this.selectedTodoItem = new ToDoItem(-1, '', '', false);
@@ -71,6 +73,7 @@ export class TodoService {
     this.todoHttpService.Update(updateTodoItems).subscribe(todoitem => {
       console.log(todoitem);
       this.updateFailMessage = '';
+      this.route.navigate(['']);
     },
       error => {
         this.updateFailMessage = 'Update fail because webapi error';
@@ -80,6 +83,7 @@ export class TodoService {
   public DeleteTodoItem(id: number): void {
     this.todoHttpService.Delete(id).subscribe(todoitem => {
       this.deleteFailMessage = '';
+      this.reload();
     },
     error => {
       this.deleteFailMessage = 'Delete fail because webapi error';
@@ -104,5 +108,9 @@ export class TodoService {
     error => {
       this.getItemFailMessage = 'Get by id fail because webapi error';
     });
+  }
+
+  private reload(): void {
+    window.location.reload();
   }
 }

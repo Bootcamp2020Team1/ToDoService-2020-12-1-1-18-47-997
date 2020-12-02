@@ -1,3 +1,4 @@
+import { Location } from '@angular/common';
 import { Router } from '@angular/router';
 import { Component, OnInit } from '@angular/core';
 import { ToDoItem } from '../model/ToDoItem';
@@ -30,10 +31,15 @@ export class ListTodoitemComponent implements OnInit {
   public deleteTodoItem(id: number): void {
     this.todoService.DeleteTodoItem(id);
     this.toDoItems = this.todoService.todoItems;
+    this.route.navigate(['']);
   }
 
   public selectTodoItem(id: number): void {
     this.route.navigate(['detail', id]);
     // this.todoService.SetSelectedTodoItemId(id);
+  }
+
+  private reload(): void {
+    window.location.reload();
   }
 }
