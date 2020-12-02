@@ -22,7 +22,7 @@ export class UpdateTodoItemComponent implements OnInit {
 
   public updateTodoItem(): void{
     this.todoItemService.UpdateTodoItem(this.todoItemService.updatingToDoItem);
-    if (this.todoItemService.updateFailMessage !== '')
+    if (this.todoItemService.updateFailMessage === '')
     {
       this.route.navigate(['']);
     }

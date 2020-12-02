@@ -1,6 +1,6 @@
 <div>
-  <span><a href="">Index</a></span>
-  <span><a href="/create">Create ToDoItem</a></span>
+  <span><button nz-button nzType="primary" (click)="goToIndex()"><i nz-icon nzType="home" nzTheme="outline"></i></button></span>
+  <span><button nz-button nzType="primary" (click)="goToCreatePage()"><i nz-icon nzType="plus-circle" nzTheme="outline"></i></button></span>
 </div>
 
 <router-outlet></router-outlet>

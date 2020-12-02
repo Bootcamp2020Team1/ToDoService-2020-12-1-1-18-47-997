@@ -4,11 +4,12 @@
     <label>Id</label>
     <h4>{{todoItemService.updatingToDoItem.id}}</h4>
     <label>Title: </label>
-    <input type="text" name="title" [(ngModel)]="todoItemService.updatingToDoItem.title">
+    <input type="text" name="title" [(ngModel)]="todoItemService.updatingToDoItem.title"><br>
     <label>Description: </label>
-    <input type="text" name="description" [(ngModel)]="todoItemService.updatingToDoItem.description">
+    <input type="text" name="description" [(ngModel)]="todoItemService.updatingToDoItem.description"><br>
     <label>IsDone</label>
-    <input type="checkbox" name="isDone" [(ngModel)]="todoItemService.updatingToDoItem.isDone">
-    <button type="submit">Submit</button>
+    <input type="checkbox" name="isDone" [(ngModel)]="todoItemService.updatingToDoItem.isDone"><br>
+    <button nz-button nzType="primary" type="submit"><i nz-icon nzType="check" nzTheme="outline"></i></button>
 </form>
 <h1>{{todoItemService.updateFailMessage}}</h1>
+<h1>{{todoItemService.getItemFailMessage}}</h1>

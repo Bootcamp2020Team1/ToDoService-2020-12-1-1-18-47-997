@@ -33,9 +33,9 @@
             {{todoItem.isDone}}
         </td>
         <td>
-            <button (click)="updateTodoItem(todoItem.id)">Update</button>
-            <button (click)="deleteTodoItem(todoItem.id)">Delete</button>
-            <button (click)="selectTodoItem(todoItem.id)">Detail</button>
+            <button nz-button nzType="primary"  (click)="updateTodoItem(todoItem.id)">Update</button>
+            <button nz-button nzType="primary" nzDanger (click)="deleteTodoItem(todoItem.id)">Delete</button>
+            <button nz-button nzType="primary" (click)="selectTodoItem(todoItem.id)">Detail</button>
         </td>
     </tr>
 </table>

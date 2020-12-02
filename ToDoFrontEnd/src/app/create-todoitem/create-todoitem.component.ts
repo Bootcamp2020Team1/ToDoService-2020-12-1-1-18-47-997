@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
 import { ToDoItem } from '../model/ToDoItem';
 import { TodoService } from '../service/todo.service';
 
@@ -9,7 +10,8 @@ import { TodoService } from '../service/todo.service';
 })
 export class CreateTodoitemComponent implements OnInit {
 
-  constructor(public todoService: TodoService) {
+  constructor(public todoService: TodoService,
+    private route: Router) {
     this.toDoItem = new ToDoItem(0, '1', '2', false);
   }
 
@@ -20,7 +22,7 @@ export class CreateTodoitemComponent implements OnInit {
 
   public createToDoItem(): void {
     this.todoService.Create(this.toDoItem);
-
+    this.route.navigate(['']);
   }
 
 }

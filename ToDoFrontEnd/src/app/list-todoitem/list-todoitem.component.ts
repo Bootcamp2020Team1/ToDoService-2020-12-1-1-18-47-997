@@ -31,7 +31,10 @@ export class ListTodoitemComponent implements OnInit {
   public deleteTodoItem(id: number): void {
     this.todoService.DeleteTodoItem(id);
     this.toDoItems = this.todoService.todoItems;
-    this.route.navigate(['']);
+    if(this.todoService.deleteFailMessage === '')
+    {
+      this.route.navigate(['']);
+    }
   }
 
   public selectTodoItem(id: number): void {
