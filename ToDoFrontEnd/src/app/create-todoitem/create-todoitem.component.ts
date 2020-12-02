@@ -9,8 +9,8 @@ import { TodoService } from '../service/todo.service';
 })
 export class CreateTodoitemComponent implements OnInit {
 
-  constructor(private todoService: TodoService) {
-    this.toDoItem = new ToDoItem(0, "1", "2", false);
+  constructor(public todoService: TodoService) {
+    this.toDoItem = new ToDoItem(0, '1', '2', false);
   }
 
   public toDoItem: ToDoItem;

@@ -7,7 +7,7 @@ const httpOptions = {
   headers: new HttpHeaders({
     'Content-Type': 'application/json'
   })
-}
+};
 
 @Injectable({
   providedIn: 'root'
@@ -25,7 +25,7 @@ export class TodoHttpService {
   }
 
   public GetById(id: number): Observable<ToDoItem> {
-    return this.httpClient.get<ToDoItem>(`https://localhost:5001/ToDoItem/${id}`)
+    return this.httpClient.get<ToDoItem>(`https://localhost:5001/ToDoItem/${id}`);
   }
 
   public Update(todoItem: ToDoItem): Observable<ToDoItem> {

@@ -45,13 +45,19 @@ export class TodoService {
   }
 
   public SetUpdatingTodoItemId(id: number): void {
-    const foundTodoItem = this.todoStore.FindById(id);
-    if (foundTodoItem !== undefined) {
-      this.updatingToDoItem = Object.assign({}, foundTodoItem);
-    }
+    this.getItemFailMessage = '';
+    this.todoHttpService.GetById(id).subscribe(todoItem => {
+      const foundTodoItem = todoItem;
+      if (foundTodoItem !== undefined) {
+        this.updatingToDoItem = Object.assign({}, foundTodoItem);
+      }
+    },
+    error => {
+      this.getItemFailMessage = 'find fail because web API error';
+    });
   }
 
-  public Create(todoItem: ToDoItem) {
+  public Create(todoItem: ToDoItem): void {
     this.todoHttpService.Create(todoItem).subscribe(todoItem => {
       console.log(todoItem);
       this.postFailMessage = '';
@@ -80,15 +86,15 @@ export class TodoService {
     });
   }
 
-  public GetTodoItemById(id: number): void {
-    this.todoHttpService.GetById(id).subscribe(item => {
-      this.selectedTodoItem = item;
-      this.getItemFailMessage = '';
-    },
-    error => {
-      this.getItemFailMessage = 'Get by id fail because webapi error';
-    });
-  }
+  // public GetTodoItemById(id: number): void {
+  //   this.todoHttpService.GetById(id).subscribe(item => {
+  //     this.selectedTodoItem = item;
+  //     this.getItemFailMessage = '';
+  //   },
+  //   error => {
+  //     this.getItemFailMessage = 'Get by id fail because webapi error';
+  //   });
+  // }
 
   public SetSelectedTodoItemId(id: number): void {
     this.todoHttpService.GetById(id).subscribe(item => {
