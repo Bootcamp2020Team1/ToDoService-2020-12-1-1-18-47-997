@@ -21,8 +21,7 @@ export class TodoService {
   private _todoItems: Array<ToDoItem>;
 
   constructor(private todoStore: TodoStoreService,
-    private todoHttpService: TodoHttpService,
-    private route: Router) {
+    private todoHttpService: TodoHttpService) {
     this._todoItems = todoStore.GetAll();
     this.updatingToDoItem = new ToDoItem(-1, '', '', false);
     this.selectedTodoItem = new ToDoItem(-1, '', '', false);
@@ -73,7 +72,6 @@ export class TodoService {
     this.todoHttpService.Update(updateTodoItems).subscribe(todoitem => {
       console.log(todoitem);
       this.updateFailMessage = '';
-      this.route.navigate(['']);
     },
       error => {
         this.updateFailMessage = 'Update fail because webapi error';
@@ -89,16 +87,6 @@ export class TodoService {
       this.deleteFailMessage = 'Delete fail because webapi error';
     });
   }
-
-  // public GetTodoItemById(id: number): void {
-  //   this.todoHttpService.GetById(id).subscribe(item => {
-  //     this.selectedTodoItem = item;
-  //     this.getItemFailMessage = '';
-  //   },
-  //   error => {
-  //     this.getItemFailMessage = 'Get by id fail because webapi error';
-  //   });
-  // }
 
   public SetSelectedTodoItemId(id: number): void {
     this.todoHttpService.GetById(id).subscribe(item => {
